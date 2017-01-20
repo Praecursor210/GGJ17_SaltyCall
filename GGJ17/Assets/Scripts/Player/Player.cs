@@ -28,11 +28,13 @@ public class Player : MonoBehaviour
 
 	private Rigidbody _rigidbody;
 
+	private bool _isDead = false;
+
 	private float _weaponAngle = 0f;
 	private WeaponState _weaponState = WeaponState.Inactive;
 
-	private const float MIN_ANGLE = -110f;
-	private const float WEAPON_SPEED = 15f;
+	private const float MIN_ANGLE = -70f;
+	private const float WEAPON_SPEED = 10f;
 
 	void Start()
 	{
@@ -47,6 +49,11 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if( transform.position.y <= -2f && !_isDead )
+		{
+			_isDead = true;
+			Debug.Log( "Player " + _id + " is dead" );
+		}
 	}
 
 	private void FixedUpdate()
@@ -66,15 +73,21 @@ public class Player : MonoBehaviour
 		//_rigidbody.position += move * 0.5f;
 		//_rigidbody.velocity = move;
 
+		if( _rigidbody.velocity.y > 0 )
+		{
+			_rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0f, _rigidbody.velocity.z );
+		}
+
 		float rightX = - Joystick.GetAxis( XInputKey.RStickX, _state );
 		float rightY = - Joystick.GetAxis( XInputKey.RStickY, _state );
+
 		if( rightX != 0f || rightY != 0f )
 		{
 			float rotate = Mathf.Atan2( rightY, rightX );
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
-		if( _weaponState == WeaponState.Inactive && Joystick.GetButtonDown( XInputKey.A, _state, _prevState ) )
+		if( _weaponState == WeaponState.Inactive && Joystick.GetButtonDown( XInputKey.RT, _state, _prevState ) )
 		{
 			_weaponState = WeaponState.Slam;
 		}
@@ -102,4 +115,15 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
+
+	/*void OnCollisionEnter( Collision collision )
+	{
+		Debug.Log( "Collider " + collision.gameObject.name );
+		if( collision.gameObject.tag == "Weapon" )
+		{
+			Debug.Log( "Collide" );
+			Vector3 tDir = ( collision.gameObject.GetComponent<Player>()._weapon.transform.position - transform.position ).normalized;
+			_rigidbody.AddForce( new Vector3( tDir.x, 0f, tDir.z ) * 100f );
+		}
+	}*/
 }
