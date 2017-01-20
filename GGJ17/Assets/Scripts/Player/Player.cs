@@ -4,37 +4,30 @@ using System.Collections;
 using System.Collections.Generic;
 using XInputDotNetPure;
 
-public enum WeaponState
-{
-	NoWeapon,
-	Inactive,
-	Slam,
-	Cooldown,
-}
-
 public class Player : MonoBehaviour
 {
 	public int _id;
-	public GameObject _weapon;
-	public Transform _weaponPivot;
+	public Weapon _weapon;
 
 	[Header( "Data" )]
+	[Range( 0f, 100f)]
 	public float _speed;
+
+	[Range( 0f, 0.25f )]
+	public float _stunCooldown;
 
 	// XInput stuff
 	private PlayerIndex _playerIndex;
 	private GamePadState _state;
 	private GamePadState _prevState;
 
-	private Rigidbody _rigidbody;
+	[HideInInspector]
+	public Rigidbody _rigidbody;
 
 	private bool _isDead = false;
 
-	private float _weaponAngle = 0f;
-	private WeaponState _weaponState = WeaponState.Inactive;
-
-	private const float MIN_ANGLE = -70f;
-	private const float WEAPON_SPEED = 10f;
+	private float _stun = 0f;
+	private bool _isStun = false;
 
 	void Start()
 	{
@@ -45,6 +38,8 @@ public class Player : MonoBehaviour
 		{
 			Physics.IgnoreCollision( GetComponent<Collider>(), _weapon.GetComponent<Collider>(), true );
 		}
+
+		StartCoroutine( StunCooldown() );
 	}
 
 	void Update()
@@ -56,12 +51,25 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	private IEnumerator StunCooldown()
+	{
+		while( !_isDead )
+		{
+			Stun( -_stunCooldown );
+			yield return new WaitForSeconds( 1f );
+		}
+	}
+
 	private void FixedUpdate()
 	{
 		GamePadState state = GamePad.GetState( _playerIndex );
 
 		if( !state.IsConnected )
 		{
+			if( _rigidbody.velocity.y > 0 )
+			{
+				_rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0f, _rigidbody.velocity.z );
+			}
 			return;
 		}
 
@@ -70,8 +78,6 @@ public class Player : MonoBehaviour
 
 		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _state ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _state ) );
 		_rigidbody.AddForce( move * _speed );
-		//_rigidbody.position += move * 0.5f;
-		//_rigidbody.velocity = move;
 
 		if( _rigidbody.velocity.y > 0 )
 		{
@@ -87,43 +93,24 @@ public class Player : MonoBehaviour
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
-		if( _weaponState == WeaponState.Inactive && Joystick.GetButtonDown( XInputKey.RT, _state, _prevState ) )
+		if( _weapon != null && Joystick.GetButtonDown( XInputKey.RT, _state, _prevState ) )
 		{
-			_weaponState = WeaponState.Slam;
-		}
-
-		if( _weaponState == WeaponState.Cooldown )
-		{
-			_weaponAngle += WEAPON_SPEED;
-			_weaponAngle = Mathf.Clamp( _weaponAngle, MIN_ANGLE, 0f );
-			_weaponPivot.localRotation = Quaternion.Euler( 0f, _weaponAngle, 0f );
-
-			if( _weaponAngle == 0f )
-			{
-				_weaponState = WeaponState.Inactive;
-			}
-		}
-		else if( _weaponState == WeaponState.Slam )
-		{
-			_weaponAngle -= WEAPON_SPEED;
-			_weaponAngle = Mathf.Clamp( _weaponAngle, MIN_ANGLE, 0f );
-			_weaponPivot.localRotation = Quaternion.Euler( 0f, _weaponAngle, 0f );
-
-			if( _weaponAngle == MIN_ANGLE )
-			{
-				_weaponState = WeaponState.Cooldown;
-			}
+			_weapon.TriggerWeapon();
 		}
 	}
 
-	/*void OnCollisionEnter( Collision collision )
+	public void Stun( float stun )
 	{
-		Debug.Log( "Collider " + collision.gameObject.name );
-		if( collision.gameObject.tag == "Weapon" )
+		_stun += stun;
+		_stun = Mathf.Clamp01( _stun );
+		
+		if( _stun == 1f && !_isStun )
 		{
-			Debug.Log( "Collide" );
-			Vector3 tDir = ( collision.gameObject.GetComponent<Player>()._weapon.transform.position - transform.position ).normalized;
-			_rigidbody.AddForce( new Vector3( tDir.x, 0f, tDir.z ) * 100f );
+			_isStun = true;
 		}
-	}*/
+		else if( _stun == 0f && _isStun )
+		{
+			_isStun = false;
+		}
+	}
 }
