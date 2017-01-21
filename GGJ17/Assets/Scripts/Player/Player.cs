@@ -16,6 +16,12 @@ public class Player : MonoBehaviour
 	[Range( 0f, 0.25f )]
 	public float _stunCooldown;
 
+	[Range( 0f, 1f )]
+	public float _stunSpeedDecrease;
+
+	[Range( 0f, 1f )]
+	public float _stunFrictionDecrease;
+
 	// XInput stuff
 	private PlayerIndex _playerIndex;
 	private GamePadState _state;
@@ -27,11 +33,20 @@ public class Player : MonoBehaviour
 
 	private bool _isDead = false;
 
-	private float _stun = 0f;
+	public float _stun { get; private set; }
 	private bool _isStun = false;
+	private bool _stopStunCd = false;
+
+	// Physics
+	private Collider _collider;
+	//private float _baseBounce;
+	private float _baseStaticFriction;
+	private float _baseDynamicFriction;
 
 	void Start()
 	{
+		GameManager.Instance.RegisterPlayer( this );
+
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
 
@@ -42,15 +57,31 @@ public class Player : MonoBehaviour
 			Physics.IgnoreCollision( GetComponent<Collider>(), _weapon.GetComponent<Collider>(), true );
 		}
 
+		_collider = GetComponent<Collider>();
+		_baseStaticFriction = _collider.material.staticFriction;
+		_baseDynamicFriction = _collider.material.dynamicFriction;
+
+		_stun = 0f;
 		StartCoroutine( StunCooldown() );
+
 	}
 
 	void Update()
 	{
-		if( transform.position.y <= -2f && !_isDead )
+		if( transform.position.y <= -10f && !_isDead )
 		{
 			_isDead = true;
 			Debug.Log( "Player " + _id + " is dead" );
+		}
+
+		if( Input.GetKeyDown( KeyCode.C ) )
+		{
+			_stopStunCd = !_stopStunCd;
+		}
+
+		if( Input.GetKeyDown( KeyCode.S ) )
+		{
+			Stun( 0.1f );
 		}
 	}
 
@@ -58,7 +89,10 @@ public class Player : MonoBehaviour
 	{
 		while( !_isDead )
 		{
-			Stun( -_stunCooldown );
+			if( !_stopStunCd )
+			{
+				Stun( -_stunCooldown );
+			}
 			yield return new WaitForSeconds( 1f );
 		}
 	}
@@ -80,7 +114,7 @@ public class Player : MonoBehaviour
 		_state = state;
 
 		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _state ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _state ) );
-		_rigidbody.AddForce( move * _speed );
+		_rigidbody.AddForce( move * ( _speed * ( 1f - ( _stun * _stunSpeedDecrease ) ) ) );
 
 		if( _animator != null )
 		{
@@ -92,12 +126,9 @@ public class Player : MonoBehaviour
 			_rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0f, _rigidbody.velocity.z );
 		}
 
-		float rightX = - Joystick.GetAxis( XInputKey.RStickX, _state );
-		float rightY = - Joystick.GetAxis( XInputKey.RStickY, _state );
-
-		if( rightX != 0f || rightY != 0f )
+		if( move.x != 0f || move.z != 0f )
 		{
-			float rotate = Mathf.Atan2( rightY, rightX ) - Mathf.PI * 0.5f;
+			float rotate = Mathf.Atan2( move.z, -move.x ) - Mathf.PI * 0.5f;
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
@@ -115,10 +146,22 @@ public class Player : MonoBehaviour
 		if( _stun == 1f && !_isStun )
 		{
 			_isStun = true;
+			if( _animator != null )
+			{
+				_animator.SetBool( "stun", true );
+			}
 		}
 		else if( _stun == 0f && _isStun )
 		{
 			_isStun = false;
+			if( _animator != null )
+			{
+				_animator.SetBool( "stun", false );
+			}
 		}
+
+		float fStunDecrease = 1f - ( _stun * _stunFrictionDecrease );
+		_collider.material.staticFriction = _baseStaticFriction * fStunDecrease;
+		_collider.material.dynamicFriction = _baseDynamicFriction * fStunDecrease;
 	}
 }

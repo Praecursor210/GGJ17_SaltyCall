@@ -14,7 +14,6 @@ public class Weapon : MonoBehaviour
 
 	private Animator _animator;
 
-	private float _weaponAngle = 0f;
 	private bool _useWeapon = false;
 
 	private float _smashDuration;
@@ -62,7 +61,8 @@ public class Weapon : MonoBehaviour
 		{
 			Player otherPlayer = collision.gameObject.GetComponent<Player>();
 			Vector3 dir = ( otherPlayer.transform.position - transform.position ).normalized;
-			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 500f );
+			Debug.Log( dir );
+			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 1000f );
 			otherPlayer.Stun( _stunAdd );
 		}
 	}

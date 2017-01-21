@@ -10,7 +10,7 @@ public class Arena : MonoBehaviour
 	private float _pitchX = 0f;
 	private float _pitchZ = 0f;
 
-	private const float MAX_PITCH = 18f;
+	private const float MAX_PITCH = 15f;
 
 	void Start()
 	{

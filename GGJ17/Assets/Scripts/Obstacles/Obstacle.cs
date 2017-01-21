@@ -5,7 +5,8 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
 	[Header( "Data" )]
-	[Range(0f, 1f)]
+	[Range( 0f, 1f )]
+	public bool _stun;
 	public float _stunAdd;
 
 	private Rigidbody _rigidbody;
