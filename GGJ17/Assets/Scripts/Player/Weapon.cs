@@ -3,65 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum WeaponState
-{
-	Inactive,
-	Slam,
-	Cooldown,
-}
-
 public class Weapon : MonoBehaviour
 {
 	public Transform _pivot;
+	public AnimationClip _smashClip;
 
 	[Header( "Data" )]
 	[Range( 0f, 1f )]
 	public float _stunAdd;
 
+	private Animator _animator;
+
 	private float _weaponAngle = 0f;
-	private WeaponState _weaponState = WeaponState.Inactive;
+	private bool _useWeapon = false;
+
+	private float _smashDuration;
+	private float _smashTimer = 0f;
 
 	private const float MIN_ANGLE = -70f;
 	private const float WEAPON_SPEED = 10f;
 
-
-	void FixedUpdate()
+	void Start()
 	{
-		if( _weaponState == WeaponState.Cooldown )
+		if( _smashClip != null )
 		{
-			_weaponAngle += WEAPON_SPEED;
-			_weaponAngle = Mathf.Clamp( _weaponAngle, MIN_ANGLE, 0f );
-			_pivot.localRotation = Quaternion.Euler( 0f, _weaponAngle, 0f );
-
-			if( _weaponAngle == 0f )
-			{
-				_weaponState = WeaponState.Inactive;
-			}
+			_smashDuration = _smashClip.length;
 		}
-		else if( _weaponState == WeaponState.Slam )
-		{
-			_weaponAngle -= WEAPON_SPEED;
-			_weaponAngle = Mathf.Clamp( _weaponAngle, MIN_ANGLE, 0f );
-			_pivot.localRotation = Quaternion.Euler( 0f, _weaponAngle, 0f );
+	}
 
-			if( _weaponAngle == MIN_ANGLE )
+	void Update()
+	{
+		if( _useWeapon )
+		{
+			_smashTimer += Time.deltaTime;
+			if( _smashTimer >= _smashDuration )
 			{
-				_weaponState = WeaponState.Cooldown;
+				_useWeapon = false;
+				_animator.SetBool( "smash", false );
 			}
 		}
 	}
 
-	public void TriggerWeapon()
+	public void TriggerWeapon( Animator animator )
 	{
-		if( _weaponState == WeaponState.Inactive )
+		_animator = animator;
+
+		if( !_useWeapon )
 		{
-			_weaponState = WeaponState.Slam;
+			_useWeapon = true;
+			_smashTimer = 0f;
+			_animator.SetBool( "smash", true );
 		}
 	}
 
 	void OnTriggerEnter( Collider collision )
 	{
-		if( collision.gameObject.tag == "Player" )
+		if( _useWeapon && collision.gameObject.tag == "Player" )
 		{
 			Player otherPlayer = collision.gameObject.GetComponent<Player>();
 			Vector3 dir = ( otherPlayer.transform.position - transform.position ).normalized;

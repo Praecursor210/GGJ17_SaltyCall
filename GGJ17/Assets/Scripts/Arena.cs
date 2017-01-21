@@ -5,11 +5,12 @@ using UnityEngine;
 public class Arena : MonoBehaviour
 {
 	public float _waveStrength = 2f;
-	public float _pitchSpeed = 0.05f;
+	public float _pitchSpeed;
 
-	private float _pitch = 0f;
+	private float _pitchX = 0f;
+	private float _pitchZ = 0f;
 
-	private const float MAX_PITCH = 15f;
+	private const float MAX_PITCH = 18f;
 
 	void Start()
 	{
@@ -19,11 +20,15 @@ public class Arena : MonoBehaviour
 
 	void Update()
 	{
-		float waveIntensity = Mathf.Sin( Time.time ) * _waveStrength;
+		float waveIntensityX = Mathf.Sin( Time.time ) * _waveStrength;
+		float waveIntensityZ = Mathf.Sin( Time.time + 0.568f ) * _waveStrength;
 
-		_pitch += waveIntensity * _pitchSpeed;
-		_pitch = Mathf.Clamp( _pitch, -MAX_PITCH, MAX_PITCH );
+		_pitchX += waveIntensityX * _pitchSpeed;
+		_pitchX = Mathf.Clamp( _pitchX, -MAX_PITCH, MAX_PITCH );
 
-		transform.localRotation = Quaternion.Euler( _pitch, 0f, 0f );
+		_pitchZ += waveIntensityZ * _pitchSpeed;
+		_pitchZ = Mathf.Clamp( _pitchZ, -MAX_PITCH, MAX_PITCH );
+
+		transform.localRotation = Quaternion.Euler( _pitchX, 0f, _pitchZ );
 	}
 }

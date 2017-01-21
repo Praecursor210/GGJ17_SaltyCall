@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
 
 	[HideInInspector]
 	public Rigidbody _rigidbody;
+	private Animator _animator;
 
 	private bool _isDead = false;
 
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
+		_animator = GetComponent<Animator>();
+
 		_playerIndex = (PlayerIndex)_id;
 
 		if( _weapon != null )
@@ -79,6 +82,11 @@ public class Player : MonoBehaviour
 		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _state ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _state ) );
 		_rigidbody.AddForce( move * _speed );
 
+		if( _animator != null )
+		{
+			_animator.SetBool( "run", ( move.x != 0f || move.y != 0f ) );
+		}
+
 		if( _rigidbody.velocity.y > 0 )
 		{
 			_rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0f, _rigidbody.velocity.z );
@@ -89,13 +97,13 @@ public class Player : MonoBehaviour
 
 		if( rightX != 0f || rightY != 0f )
 		{
-			float rotate = Mathf.Atan2( rightY, rightX );
+			float rotate = Mathf.Atan2( rightY, rightX ) - Mathf.PI * 0.5f;
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
 		if( _weapon != null && Joystick.GetButtonDown( XInputKey.RT, _state, _prevState ) )
 		{
-			_weapon.TriggerWeapon();
+			_weapon.TriggerWeapon( _animator );
 		}
 	}
 
