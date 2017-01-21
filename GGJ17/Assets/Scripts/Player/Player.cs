@@ -22,14 +22,11 @@ public class Player : MonoBehaviour
 	[Range( 0f, 1f )]
 	public float _stunFrictionDecrease;
 
-	// XInput stuff
-	private PlayerIndex _playerIndex;
-	private GamePadState _state;
-	private GamePadState _prevState;
-
 	[HideInInspector]
 	public Rigidbody _rigidbody;
 	private Animator _animator;
+
+	private PlayerStatus _status;
 
 	private bool _isDead = false;
 
@@ -45,12 +42,10 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
-		GameManager.Instance.RegisterPlayer( this );
+		_status = GameManager.Instance.LoadPlayer( _id, this );
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
-
-		_playerIndex = (PlayerIndex)_id;
 
 		if( _weapon != null )
 		{
@@ -63,7 +58,6 @@ public class Player : MonoBehaviour
 
 		_stun = 0f;
 		StartCoroutine( StunCooldown() );
-
 	}
 
 	void Update()
@@ -71,7 +65,7 @@ public class Player : MonoBehaviour
 		if( transform.position.y <= -10f && !_isDead )
 		{
 			_isDead = true;
-			Debug.Log( "Player " + _id + " is dead" );
+			Debug.Log( "Player " + _status._id + " is dead" );
 		}
 
 		if( Input.GetKeyDown( KeyCode.C ) )
@@ -99,9 +93,7 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		GamePadState state = GamePad.GetState( _playerIndex );
-
-		if( !state.IsConnected )
+		if( !_status._padState.IsConnected )
 		{
 			if( _rigidbody.velocity.y > 0 )
 			{
@@ -110,10 +102,7 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		_prevState = _state;
-		_state = state;
-
-		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _state ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _state ) );
+		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _status._padState ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _status._padPrevState ) );
 		_rigidbody.AddForce( move * ( _speed * ( 1f - ( _stun * _stunSpeedDecrease ) ) ) );
 
 		if( _animator != null )
@@ -132,7 +121,7 @@ public class Player : MonoBehaviour
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
-		if( _weapon != null && Joystick.GetButtonDown( XInputKey.RT, _state, _prevState ) )
+		if( _weapon != null && Joystick.GetButtonDown( XInputKey.RT, _status._padState, _status._padPrevState ) )
 		{
 			_weapon.TriggerWeapon( _animator );
 		}

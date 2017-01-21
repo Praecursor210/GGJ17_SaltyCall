@@ -1,26 +1,49 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class GameManager
+public class GameManager : MonoBehaviour
 {
-	private static readonly GameManager _instance = new GameManager();
-	public static GameManager Instance { get { return _instance; } }
+	public static GameManager Instance { get; private set; }
 
 	public int _nbPlayers { get; private set; }
-	public List<Player> _players = new List<Player>();
+	public List<PlayerStatus> _players = new List<PlayerStatus>();
 
-	private GameManager()
+	public const int MAX_PLAYERS = 4;
+
+	void Awake()
 	{
-		_nbPlayers = 2;
+		Instance = this;
+		DontDestroyOnLoad( gameObject );
+		for( int i = 0; i < MAX_PLAYERS; i++ )
+		{
+			_players.Add( new PlayerStatus( i ) );
+		}
 	}
 
-	public void RegisterPlayer( Player player )
+	private void Update()
 	{
-		if( !_players.Contains( player ) )
+		for( int i = 0; i < _players.Count; i++ )
 		{
-			_players.Add( player );
+			_players[i].Update();
 		}
+	}
+
+	public void StartGame()
+	{
+		_nbPlayers = _players.Count( c => c._state == PlayerState.InGame );
+	}
+
+	public PlayerStatus LoadPlayer( int id, Player obj )
+	{
+		_players[id]._playerObject = obj;
+		return _players[id];
+	}
+
+	public void SetNbPlayers( int players )
+	{
+		_nbPlayers = players;
 	}
 
 	public void Endgame()

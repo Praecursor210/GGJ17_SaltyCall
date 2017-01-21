@@ -14,7 +14,7 @@ public class DebugUI : MonoBehaviour
 
 	void Update()
 	{
-		_text.text = @"Stun P1: " + GameManager.Instance._players[0]._stun + "\n" +
-			"Stun P2: " + GameManager.Instance._players[1]._stun + "\n";
+		_text.text = @"Stun P1: " + GameManager.Instance._players[0]._playerObject._stun + "\n" +
+			"Stun P2: " + GameManager.Instance._players[1]._playerObject._stun + "\n";
 	}
 }
