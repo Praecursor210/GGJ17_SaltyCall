@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
 	public int _id;
 	public Weapon _weapon;
+	public ParticleSystem _particleSmoke;
 
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
@@ -21,6 +22,9 @@ public class Player : MonoBehaviour
 
 	[Range( 0f, 1f )]
 	public float _stunFrictionDecrease;
+
+	[Range( 0f, 100f )]
+	public float _maxSpeed;
 
 	[HideInInspector]
 	public Rigidbody _rigidbody;
@@ -43,6 +47,7 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		_status = GameManager.Instance.LoadPlayer( _id, this );
+		_particleSmoke.Stop();
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
@@ -93,6 +98,11 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if( _status == null )
+		{
+			return;
+		}
+
 		if( !_status._padState.IsConnected )
 		{
 			if( _rigidbody.velocity.y > 0 )
@@ -104,10 +114,21 @@ public class Player : MonoBehaviour
 
 		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _status._padState ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _status._padPrevState ) );
 		_rigidbody.AddForce( move * ( _speed * ( 1f - ( _stun * _stunSpeedDecrease ) ) ) );
+		_rigidbody.velocity = Vector3.ClampMagnitude( _rigidbody.velocity, _maxSpeed );
 
-		if( _animator != null )
+		bool run = ( move.x != 0f || move.z != 0f );
+		if( _animator != null && _animator.enabled )
 		{
-			_animator.SetBool( "run", ( move.x != 0f || move.y != 0f ) );
+			_animator.SetBool( "run", run );
+		}
+
+		if( run && !_particleSmoke.isPlaying )
+		{
+			_particleSmoke.Play();
+		}
+		else if( !run && _particleSmoke.isPlaying )
+		{
+			_particleSmoke.Stop();
 		}
 
 		if( _rigidbody.velocity.y > 0 )
@@ -135,7 +156,7 @@ public class Player : MonoBehaviour
 		if( _stun == 1f && !_isStun )
 		{
 			_isStun = true;
-			if( _animator != null )
+			if( _animator != null && _animator.enabled )
 			{
 				_animator.SetBool( "stun", true );
 			}
@@ -143,7 +164,7 @@ public class Player : MonoBehaviour
 		else if( _stun == 0f && _isStun )
 		{
 			_isStun = false;
-			if( _animator != null )
+			if( _animator != null && _animator.enabled )
 			{
 				_animator.SetBool( "stun", false );
 			}

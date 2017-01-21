@@ -10,7 +10,10 @@ public class Arena : MonoBehaviour
 	private float _pitchX = 0f;
 	private float _pitchZ = 0f;
 
-	private const float MAX_PITCH = 15f;
+	private float _waveIntensityX = 0f;
+	private float _waveIntensityZ = 0f;
+
+	private const float MAX_PITCH = 6f;
 
 	void Start()
 	{
@@ -20,14 +23,17 @@ public class Arena : MonoBehaviour
 
 	void Update()
 	{
-		float waveIntensityX = Mathf.Sin( Time.time ) * _waveStrength;
-		float waveIntensityZ = Mathf.Sin( Time.time + 0.568f ) * _waveStrength;
+		_waveIntensityX = ( Mathf.Sin( Time.time * _pitchSpeed ) + 1f ) * 0.5f;
+		_waveIntensityZ = ( Mathf.Sin( Time.time * _pitchSpeed + 0.568f ) + 1f ) * 0.5f;
 
-		_pitchX += waveIntensityX * _pitchSpeed;
-		_pitchX = Mathf.Clamp( _pitchX, -MAX_PITCH, MAX_PITCH );
+		//_pitchX += waveIntensityX * _pitchSpeed;
+		//_pitchX = Mathf.Clamp( _pitchX, -MAX_PITCH, MAX_PITCH );
 
-		_pitchZ += waveIntensityZ * _pitchSpeed;
-		_pitchZ = Mathf.Clamp( _pitchZ, -MAX_PITCH, MAX_PITCH );
+		_pitchX = Mathf.Lerp( -MAX_PITCH, MAX_PITCH, _waveIntensityX );
+		_pitchZ = Mathf.Lerp( -MAX_PITCH, MAX_PITCH, _waveIntensityZ );
+
+		//_pitchZ += waveIntensityZ * _pitchSpeed;
+		//_pitchZ = Mathf.Clamp( _pitchZ, -MAX_PITCH, MAX_PITCH );
 
 		transform.localRotation = Quaternion.Euler( _pitchX, 0f, _pitchZ );
 	}

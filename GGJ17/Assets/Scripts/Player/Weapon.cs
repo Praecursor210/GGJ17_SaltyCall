@@ -55,14 +55,14 @@ public class Weapon : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter( Collider collision )
+	void OnTriggerStay( Collider collision )
 	{
 		if( _useWeapon && collision.gameObject.tag == "Player" )
 		{
 			Player otherPlayer = collision.gameObject.GetComponent<Player>();
 			Vector3 dir = ( otherPlayer.transform.position - transform.position ).normalized;
 			Debug.Log( dir );
-			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 1000f );
+			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 2000f );
 			otherPlayer.Stun( _stunAdd );
 		}
 	}
