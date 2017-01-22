@@ -6,21 +6,15 @@ using System.Collections.Generic;
 
 public class PlayerSelection : MonoBehaviour
 {
-	public GameObject _selectorPrefab;
+	public List<GameObject> _playerPanel = new List<GameObject>();
 
-	private List<GameObject> _playerPanel = new List<GameObject>();
 
 	void Start()
 	{
-		for( int i = 0; i < GameManager.MAX_PLAYERS; i++ )
-		{
-			GameObject obj = Instantiate( _selectorPrefab, transform, false );
-			_playerPanel.Add( obj );
-		}
-
 #if UNITY_EDITOR
+		SetIngame( 1 );
 		GameManager.Instance._players[1]._state = PlayerState.InGame;
-		_playerPanel[1].GetComponentInChildren<Text>().text = "Hello player 2";
+		_playerPanel[1].GetComponentInChildren<Text>().text = "Ready!";
 #endif
 	}
 
@@ -32,15 +26,15 @@ public class PlayerSelection : MonoBehaviour
 			if( status._state == PlayerState.PadConnected && Joystick.GetButtonDown( XInputKey.A, status._padState, status._padPrevState ) )
 			{
 				status._state = PlayerState.InGame;
-				_playerPanel[i].GetComponentInChildren<Text>().text = "Hello player " + ( i + 1 );
+				SetIngame( i );
 			}
 			else if( status._state == PlayerState.PadConnected )
 			{
-				_playerPanel[i].GetComponentInChildren<Text>().text = "Pad connected! \n Press A to join.";
+				SetConnected( i );
 			}
 			else if( status._state == PlayerState.None )
 			{
-				_playerPanel[i].GetComponentInChildren<Text>().text = "No pad";
+				SetDisconnected( i );
 			}
 		}
 
@@ -49,5 +43,26 @@ public class PlayerSelection : MonoBehaviour
 			SceneManager.LoadScene( "Main" );
 			GameManager.Instance.StartGame();
 		}
+	}
+
+	void SetConnected( int id )
+	{
+		_playerPanel[id].transform.GetChild( 1 ).GetComponent<Text>().text = "Press A to join!";
+		_playerPanel[id].GetComponent<Image>().color = new Color( 150f / 255f, 150f / 255f, 150f / 255f, 100f / 255f );
+		_playerPanel[id].transform.GetChild( 0 ).GetComponent<Image>().color = new Color( 1f, 1f, 1f, 150f / 255f );
+	}
+
+	void SetDisconnected( int id )
+	{
+		_playerPanel[id].transform.GetChild( 1 ).GetComponent<Text>().text = "Pad not connected!";
+		_playerPanel[id].GetComponent<Image>().color = new Color( 100f / 255f, 100f / 255f, 100f / 255f, 100f / 255f );
+		_playerPanel[id].transform.GetChild( 0 ).GetComponent<Image>().color = new Color( 1f, 1f, 1f, 50f / 255f );
+	}
+
+	void SetIngame( int id )
+	{
+		_playerPanel[id].transform.GetChild( 1 ).GetComponent<Text>().text = "Press A to join!";
+		_playerPanel[id].GetComponent<Image>().color = new Color( 200f / 255f, 200f / 255f, 200f / 255f, 100f / 255f );
+		_playerPanel[id].transform.GetChild( 0 ).GetComponent<Image>().color = new Color( 1f, 1f, 1f, 1f );
 	}
 }

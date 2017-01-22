@@ -103,6 +103,15 @@ public class Player : MonoBehaviour
 		{
 			Stun( 0.1f );
 		}
+
+		if( _weapon != null && Joystick.GetButtonUp( XInputKey.RT, _status._padState, _status._padPrevState ) )
+		{
+			_weapon.TriggerWeapon();
+		}
+		else if( _weapon != null && Joystick.GetButton( XInputKey.RT, _status._padState ) )
+		{
+			_weapon.LoadWeapon();
+		}
 	}
 
 	public IEnumerator ControllerVibration( float intensity, float duration )
@@ -172,15 +181,6 @@ public class Player : MonoBehaviour
 		{
 			float rotate = Mathf.Atan2( move.z, -move.x ) - Mathf.PI * 0.5f;
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
-		}
-
-		if( _weapon != null && Joystick.GetButtonUp( XInputKey.RT, _status._padState, _status._padPrevState ) )
-		{
-			_weapon.TriggerWeapon();
-		}
-		else if( _weapon != null && Joystick.GetButton( XInputKey.RT, _status._padState ) )
-		{
-			_weapon.LoadWeapon();
 		}
 	}
 

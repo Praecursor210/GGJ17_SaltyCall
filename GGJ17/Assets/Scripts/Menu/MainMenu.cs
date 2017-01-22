@@ -69,6 +69,6 @@ public class MainMenu : MonoBehaviour
 		_selector = id;
 
 		_cursor.SetParent( transform.GetChild( _selector ), false );
-		_cursor.localPosition = new Vector3( -150f, 0f, 0f );
+		_cursor.localPosition = new Vector3( -225f, 0f, 0f );
 	}
 }

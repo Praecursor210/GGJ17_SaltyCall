@@ -40,7 +40,7 @@ public class Weapon : MonoBehaviour
 		Physics.IgnoreCollision( GetComponent<Collider>(), GetComponent<Collider>(), true );
 		if( _smashClip != null )
 		{
-			_smashDuration = _smashClip.length;
+			_smashDuration = _smashClip.length * 0.95f;
 		}
 	}
 
@@ -49,7 +49,7 @@ public class Weapon : MonoBehaviour
 		if( _cooldown )
 		{
 			_cooldownTimer += Time.deltaTime;
-			if( _cooldownTimer >= 0.33f )
+			if( _cooldownTimer >= 0.5f )
 			{
 				_cooldown = false;
 			}
@@ -95,7 +95,6 @@ public class Weapon : MonoBehaviour
 
 		if( !_useWeapon )
 		{
-			Debug.Log( "USE" );
 			_smashPower = Mathf.Clamp( _smashPower, _minPower, 1f );
 			_useWeapon = true;
 			_smashTimer = 0f;
