@@ -48,8 +48,6 @@ public class BarrelFactory : MonoBehaviour
 		barrelObj.transform.position = _spawners[spawner].position;
 		barrelObj.GetComponent<Rigidbody>().velocity = _spawners[spawner].right * _initialSpeed;
 
-		Debug.Log( _spawners[spawner].right );
-
 		//Barrel barrelSc = barrelObj.GetComponent<Barrel>();
 		//barrelSc.SetImpulse( _spawners[spawner].right * 1000f );
 

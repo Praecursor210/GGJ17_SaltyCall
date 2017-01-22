@@ -2002,7 +2002,7 @@ MonoBehaviour:
   _particleSplash: {fileID: 35977609}
   _particlePaf: {fileID: 909426737}
   _speed: 70
-  _stunCooldown: 0.25
+  _stunCooldown: 0.5
   _stunSpeedMultipier: 0.5
   _stunFrictionDecrease: 0.75
   _maxSpeed: 20
@@ -2165,7 +2165,7 @@ MonoBehaviour:
   _particleSplash: {fileID: 280905440}
   _particlePaf: {fileID: 1787683900}
   _speed: 70
-  _stunCooldown: 0.25
+  _stunCooldown: 0.5
   _stunSpeedMultipier: 0.5
   _stunFrictionDecrease: 0.75
   _maxSpeed: 20
@@ -2973,7 +2973,7 @@ MonoBehaviour:
   _particleSplash: {fileID: 1084908834}
   _particlePaf: {fileID: 1784239422}
   _speed: 70
-  _stunCooldown: 0.25
+  _stunCooldown: 0.5
   _stunSpeedMultipier: 0.5
   _stunFrictionDecrease: 0.75
   _maxSpeed: 20
@@ -4079,7 +4079,7 @@ MonoBehaviour:
   _particleSplash: {fileID: 968701707}
   _particlePaf: {fileID: 439215821}
   _speed: 70
-  _stunCooldown: 0.25
+  _stunCooldown: 0.5
   _stunSpeedMultipier: 0.5
   _stunFrictionDecrease: 0.75
   _maxSpeed: 20

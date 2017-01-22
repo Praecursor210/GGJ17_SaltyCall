@@ -24,6 +24,9 @@ public class Weapon : MonoBehaviour
 	private float _smashDuration;
 	private float _smashTimer = 0f;
 
+	private float _cooldownTimer = 0f;
+	private bool _cooldown = false;
+
 	private float _smashPower = 0f;
 
 	private const float MIN_ANGLE = -70f;
@@ -43,13 +46,23 @@ public class Weapon : MonoBehaviour
 
 	void Update()
 	{
-		if( _useWeapon )
+		if( _cooldown )
+		{
+			_cooldownTimer += Time.deltaTime;
+			if( _cooldownTimer >= 0.5f )
+			{
+				_cooldown = false;
+			}
+		}
+		else if( _useWeapon )
 		{
 			_smashTimer += Time.deltaTime;
 			if( _smashTimer >= _smashDuration )
 			{
 				_useWeapon = false;
 				_smashPower = 0f;
+				_cooldown = true;
+				_cooldownTimer = 0f;
 				_animator.SetBool( "smash", false );
 				_hits.Clear();
 			}
@@ -58,6 +71,11 @@ public class Weapon : MonoBehaviour
 
 	public void LoadWeapon()
 	{
+		if( _cooldown )
+		{
+			return;
+		}
+
 		_smashPower += Time.deltaTime * _powerLoadSpeed;
 		_smashPower = Mathf.Clamp01( _smashPower );
 
@@ -70,8 +88,14 @@ public class Weapon : MonoBehaviour
 
 	public void TriggerWeapon()
 	{
+		if( _cooldown )
+		{
+			return;
+		}
+
 		if( !_useWeapon )
 		{
+			Debug.Log( "USE" );
 			_smashPower = Mathf.Clamp( _smashPower, _minPower, 1f );
 			_useWeapon = true;
 			_smashTimer = 0f;
