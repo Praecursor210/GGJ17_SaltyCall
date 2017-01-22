@@ -17,6 +17,11 @@ public class PlayerSelection : MonoBehaviour
 			GameObject obj = Instantiate( _selectorPrefab, transform, false );
 			_playerPanel.Add( obj );
 		}
+
+#if UNITY_EDITOR
+		GameManager.Instance._players[1]._state = PlayerState.InGame;
+		_playerPanel[1].GetComponentInChildren<Text>().text = "Hello player 2";
+#endif
 	}
 
 	void Update()

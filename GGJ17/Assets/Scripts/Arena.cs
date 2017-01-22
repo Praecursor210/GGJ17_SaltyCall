@@ -15,11 +15,6 @@ public class Arena : MonoBehaviour
 
 	private const float MAX_PITCH = 6f;
 
-	void Start()
-	{
-
-	}
-
 
 	void Update()
 	{

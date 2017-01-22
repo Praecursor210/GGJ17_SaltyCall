@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 527201a6c4617d9498e765de3d916ead
-timeCreated: 1485013928
+guid: 74008d7ea88e5864d9c489d5857a9441
+timeCreated: 1485039057
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -12,7 +12,7 @@ ModelImporter:
     100008: LeftArm
     100010: LeftHand
     100012: LeftLeg
-    100014: Pirate02
+    100014: Pirate01
     100016: //RootNode
     100018: RightArm
     100020: RightHand
@@ -25,16 +25,16 @@ ModelImporter:
     400008: LeftArm
     400010: LeftHand
     400012: LeftLeg
-    400014: Pirate02
+    400014: Pirate01
     400016: //RootNode
     400018: RightArm
     400020: RightHand
     400022: RightLeg
     400024: Root
-    4300000: Pirate02
+    4300000: Pirate01
     7400000: Smash
     9500000: //RootNode
-    13700000: Pirate02
+    13700000: Pirate01
   materials:
     importMaterials: 1
     materialName: 0
@@ -60,7 +60,7 @@ ModelImporter:
       name: Smash
       takeName: Take 001
       firstFrame: 0
-      lastFrame: 20
+      lastFrame: 16
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -83,7 +83,7 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
-      - path: Pirate02
+      - path: Pirate01
         weight: 1
       - path: Root
         weight: 1

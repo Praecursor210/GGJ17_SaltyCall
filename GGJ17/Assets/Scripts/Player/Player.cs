@@ -7,18 +7,17 @@ using XInputDotNetPure;
 public class Player : MonoBehaviour
 {
 	public int _id;
-	public Weapon _weapon;
 	public ParticleSystem _particleSmoke;
 
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
 	public float _speed;
 
-	[Range( 0f, 0.25f )]
+	[Range( 0f, 0.75f )]
 	public float _stunCooldown;
 
-	[Range( 0f, 1f )]
-	public float _stunSpeedDecrease;
+	[Range( 0f, 10f )]
+	public float _stunSpeedMultipier;
 
 	[Range( 0f, 1f )]
 	public float _stunFrictionDecrease;
@@ -28,11 +27,12 @@ public class Player : MonoBehaviour
 
 	[HideInInspector]
 	public Rigidbody _rigidbody;
+	private Weapon _weapon;
 	private Animator _animator;
 
 	private PlayerStatus _status;
 
-	private bool _isDead = false;
+	public bool _isDead { get; private set; }
 
 	public float _stun { get; private set; }
 	private bool _isStun = false;
@@ -46,7 +46,15 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		_weapon = GetComponentInChildren<Weapon>();
 		_status = GameManager.Instance.LoadPlayer( _id, this );
+		if( _status == null )
+		{
+			gameObject.SetActive( false );
+			return;
+		}
+
+		_isDead = false;
 		_particleSmoke.Stop();
 
 		_rigidbody = GetComponent<Rigidbody>();
@@ -98,7 +106,7 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if( _status == null )
+		if( _status == null || _isStun )
 		{
 			return;
 		}
@@ -112,9 +120,11 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _status._padState ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _status._padPrevState ) );
-		_rigidbody.AddForce( move * ( _speed * ( 1f - ( _stun * _stunSpeedDecrease ) ) ) );
-		_rigidbody.velocity = Vector3.ClampMagnitude( _rigidbody.velocity, _maxSpeed );
+		Vector3 move = new Vector3( Joystick.GetAxis( XInputKey.LStickX, _status._padState ), 0f, -Joystick.GetAxis( XInputKey.LStickY, _status._padPrevState ) ) * Time.fixedDeltaTime * 50f;
+
+		float stunMultiplier = 1f + _stun * _stunSpeedMultipier;
+		_rigidbody.AddForce( move * ( _speed * stunMultiplier ) );
+		_rigidbody.velocity = Vector3.ClampMagnitude( _rigidbody.velocity, _maxSpeed * stunMultiplier );
 
 		bool run = ( move.x != 0f || move.z != 0f );
 		if( _animator != null && _animator.enabled )
@@ -142,9 +152,13 @@ public class Player : MonoBehaviour
 			_rigidbody.rotation = Quaternion.Euler( 0f, Mathf.Rad2Deg * rotate, 0f );
 		}
 
-		if( _weapon != null && Joystick.GetButtonDown( XInputKey.RT, _status._padState, _status._padPrevState ) )
+		if( _weapon != null && Joystick.GetButtonUp( XInputKey.RT, _status._padState, _status._padPrevState ) )
 		{
-			_weapon.TriggerWeapon( _animator );
+			_weapon.TriggerWeapon();
+		}
+		else if( _weapon != null && Joystick.GetButton( XInputKey.RT, _status._padState ) )
+		{
+			_weapon.LoadWeapon();
 		}
 	}
 

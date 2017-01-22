@@ -22,11 +22,11 @@ GameObject:
   - component: {fileID: 33143336336854882}
   - component: {fileID: 136210655936390630}
   - component: {fileID: 23167164835184364}
-  - component: {fileID: 114306672831782642}
   - component: {fileID: 54603191433585218}
-  m_Layer: 0
+  - component: {fileID: 114371656220203460}
+  m_Layer: 11
   m_Name: Barrel
-  m_TagString: Untagged
+  m_TagString: Barrel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +97,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 16
   m_CollisionDetection: 0
---- !u!114 &114306672831782642
+--- !u!114 &114371656220203460
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -105,11 +105,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573457641178868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 020c9f7eed8dc424a87d5a3d67304f62, type: 3}
+  m_Script: {fileID: 11500000, guid: e303aebc5659e4341b86fdbaa34c47fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stun: 0
-  _stunAdd: 0
+  _baseStun: 0.25
+  _bumpMultiplier: 1.5
 --- !u!136 &136210655936390630
 CapsuleCollider:
   m_ObjectHideFlags: 1
