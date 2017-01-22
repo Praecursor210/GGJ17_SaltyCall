@@ -7,9 +7,12 @@ using XInputDotNetPure;
 public class Player : MonoBehaviour
 {
 	public int _id;
+
+	[Header( "VFX" )]
 	public ParticleSystem _particleSmoke;
 	public ParticleSystem _particleSplash;
 	public ParticleSystem _particlePaf;
+	public ParticleSystem _particleStun;
 
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
@@ -60,6 +63,7 @@ public class Player : MonoBehaviour
 		_particleSmoke.Stop();
 		_particleSplash.Stop();
 		_particlePaf.Stop();
+		_particleStun.Stop();
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
@@ -182,6 +186,7 @@ public class Player : MonoBehaviour
 			if( _animator != null && _animator.enabled )
 			{
 				_animator.SetBool( "stun", true );
+				_particleStun.Play();
 			}
 		}
 		else if( _stun == 0f && _isStun )
@@ -190,6 +195,7 @@ public class Player : MonoBehaviour
 			if( _animator != null && _animator.enabled )
 			{
 				_animator.SetBool( "stun", false );
+				_particleStun.Stop();
 			}
 		}
 

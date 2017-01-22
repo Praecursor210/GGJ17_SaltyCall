@@ -49,7 +49,7 @@ public class Weapon : MonoBehaviour
 		if( _cooldown )
 		{
 			_cooldownTimer += Time.deltaTime;
-			if( _cooldownTimer >= 0.5f )
+			if( _cooldownTimer >= 0.33f )
 			{
 				_cooldown = false;
 			}
@@ -118,6 +118,7 @@ public class Weapon : MonoBehaviour
 			Vector3 dir = transform.forward; //( otherPlayer.transform.position - transform.position ).normalized;
 			//otherPlayer._rigidbody.velocity = new Vector3( dir.x, 0f, dir.z ) * 2200f * ( _smashPower * 0.5f + 0.5f );
 			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 2000f * ( _smashPower * 0.5f + 0.5f ) );
+			Debug.Log( _smashPower );
 			otherPlayer.Stun( _stunAdd * _smashPower );
 			otherPlayer._particlePaf.Play();
 		}
