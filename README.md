@@ -7,4 +7,4 @@ Created and tested on Unity 5.5.0. You need at least two controllers to play (te
 
 ### External resources
 - XInput for Unity: https://github.com/speps/XInputDotNet
-- Standard Assets of Unity
+- Standard Assets of Unity for post-process: Antialiazing, Bloom effect
