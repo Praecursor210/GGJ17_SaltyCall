@@ -14,7 +14,6 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_EDITOR
 		SetIngame( 1 );
 		GameManager.Instance._players[1]._state = PlayerState.InGame;
-		_playerPanel[1].GetComponentInChildren<Text>().text = "Ready!";
 #endif
 	}
 
@@ -61,7 +60,7 @@ public class PlayerSelection : MonoBehaviour
 
 	void SetIngame( int id )
 	{
-		_playerPanel[id].transform.GetChild( 1 ).GetComponent<Text>().text = "Press A to join!";
+		_playerPanel[id].transform.GetChild( 1 ).GetComponent<Text>().text = "Ready!";
 		_playerPanel[id].GetComponent<Image>().color = new Color( 200f / 255f, 200f / 255f, 200f / 255f, 100f / 255f );
 		_playerPanel[id].transform.GetChild( 0 ).GetComponent<Image>().color = new Color( 1f, 1f, 1f, 1f );
 	}

@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
 	public ParticleSystem _particlePaf;
 	public ParticleSystem _particleStun;
 
+	[Header( "Audio" )]
+	public AudioSource _audioSplash;
+	public AudioSource _audioSmash;
+	public AudioSource _audioStep;
+
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
 	public float _speed;
@@ -91,6 +96,7 @@ public class Player : MonoBehaviour
 
 		if( transform.position.y <= -5f && !_particleSplash.isPlaying )
 		{
+			_audioSplash.Play();
 			_particleSplash.Play();
 		}
 
@@ -166,10 +172,12 @@ public class Player : MonoBehaviour
 		if( run && !_particleSmoke.isPlaying )
 		{
 			_particleSmoke.Play();
+			_audioStep.Play();
 		}
 		else if( !run && _particleSmoke.isPlaying )
 		{
 			_particleSmoke.Stop();
+			_audioStep.Stop();
 		}
 
 		/*if( _rigidbody.velocity.y > 0 )
@@ -212,5 +220,11 @@ public class Player : MonoBehaviour
 		float fStunDecrease = 1f - ( _stun * _stunFrictionDecrease );
 		_collider.material.staticFriction = _baseStaticFriction * fStunDecrease;
 		_collider.material.dynamicFriction = _baseDynamicFriction * fStunDecrease;
+	}
+
+	public void SmashSound()
+	{
+		_audioSmash.clip = Resources.Load<AudioClip>( "Smash/Smash" + UnityEngine.Random.Range( 0, 4 ) ) as AudioClip;
+		_audioSmash.Play();
 	}
 }

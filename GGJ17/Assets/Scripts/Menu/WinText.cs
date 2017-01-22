@@ -10,10 +10,12 @@ public class WinText : MonoBehaviour
 	void Start()
 	{
 		Instance = this;
+		GetComponent<Text>().text = "";
 	}
 
 	public void DisplayWinner( int winner )
 	{
-		GetComponent<Text>().text = "Player " + winner + " win! "; 
+		GetComponent<Text>().text = "Player " + winner + " win! ";
+		transform.GetChild( winner ).gameObject.SetActive( true );
 	}
 }

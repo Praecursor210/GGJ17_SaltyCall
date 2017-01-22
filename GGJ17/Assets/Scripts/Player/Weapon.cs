@@ -120,7 +120,8 @@ public class Weapon : MonoBehaviour
 			Debug.Log( _smashPower );
 			otherPlayer.Stun( _stunAdd * _smashPower );
 			otherPlayer._particlePaf.Play();
-			otherPlayer.StartCoroutine( otherPlayer.ControllerVibration( 0.2f, 0.4f ) ); 
+			otherPlayer.StartCoroutine( otherPlayer.ControllerVibration( 0.2f, 0.4f ) );
+			otherPlayer.SmashSound();
 			StartCoroutine( CameraShake.Instance.Shake( _smashPower * 0.5f + 0.2f, _smashPower * 0.5f + 0.75f ) );
 		}
 		else if( collision.gameObject.tag == "Barrel" )
