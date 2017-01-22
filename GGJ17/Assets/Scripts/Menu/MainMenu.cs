@@ -56,7 +56,7 @@ public class MainMenu : MonoBehaviour
 
 	public void Credits()
 	{
-		Debug.Log( "LATER" );
+		SceneManager.LoadScene( "Credits" );
 	}
 
 	public void Quit()

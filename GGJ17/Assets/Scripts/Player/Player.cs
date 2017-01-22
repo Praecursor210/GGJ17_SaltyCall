@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
 	public int _id;
 	public ParticleSystem _particleSmoke;
 	public ParticleSystem _particleSplash;
+	public ParticleSystem _particlePaf;
 
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
@@ -58,6 +59,7 @@ public class Player : MonoBehaviour
 		_isDead = false;
 		_particleSmoke.Stop();
 		_particleSplash.Stop();
+		_particlePaf.Stop();
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
