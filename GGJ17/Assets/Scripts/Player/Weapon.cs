@@ -121,11 +121,14 @@ public class Weapon : MonoBehaviour
 			Debug.Log( _smashPower );
 			otherPlayer.Stun( _stunAdd * _smashPower );
 			otherPlayer._particlePaf.Play();
+			otherPlayer.StartCoroutine( otherPlayer.ControllerVibration( 0.2f, 0.4f ) ); 
+			StartCoroutine( CameraShake.Instance.Shake( _smashPower * 0.5f + 0.2f, _smashPower * 0.5f + 0.75f ) );
 		}
 		else if( collision.gameObject.tag == "Barrel" )
 		{
 			Vector3 dir = ( collision.transform.position - transform.position ).normalized;
 			collision.GetComponent<Rigidbody>().velocity = new Vector3( dir.x, 0f, dir.z ) * 50f * _smashPower;
+			StartCoroutine( CameraShake.Instance.Shake( _smashPower * 0.5f, _smashPower * 0.5f + 0.5f ) );
 			//collision.GetComponent<Rigidbody>().AddForce( new Vector3( dir.x, 0f, dir.z ) * 4000f );
 		}
 	}

@@ -105,6 +105,15 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public IEnumerator ControllerVibration( float intensity, float duration )
+	{
+		GamePad.SetVibration( _status._playerIndex, intensity, intensity );
+
+		yield return new WaitForSeconds( duration );
+
+		GamePad.SetVibration( _status._playerIndex, 0f, 0f );
+	}
+
 	private IEnumerator StunCooldown()
 	{
 		while( !_isDead )
@@ -187,6 +196,7 @@ public class Player : MonoBehaviour
 			{
 				_animator.SetBool( "stun", true );
 				_particleStun.Play();
+				StartCoroutine( ControllerVibration( 0.6f, 1.5f ) );
 			}
 		}
 		else if( _stun == 0f && _isStun )
