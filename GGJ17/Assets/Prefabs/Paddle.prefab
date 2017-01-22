@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4e9cd645853b5f42b4173b0164ffc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _smashClip: {fileID: 7400000, guid: 74008d7ea88e5864d9c489d5857a9441, type: 3}
+  _smashClip: {fileID: 7400000, guid: b540a001d2369cb4382073d066a3c218, type: 3}
   _stunAdd: 1
   _powerLoadSpeed: 0.4
   _minPower: 0.1

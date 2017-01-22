@@ -92,8 +92,8 @@ public class Weapon : MonoBehaviour
 		{
 			Player otherPlayer = collision.gameObject.GetComponent<Player>();
 			Vector3 dir = transform.forward; //( otherPlayer.transform.position - transform.position ).normalized;
-			//otherPlayer._rigidbody.velocity = new Vector3( dir.x, 0f, dir.z ) * 2500f;
-			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 2000f * _smashPower );
+			//otherPlayer._rigidbody.velocity = new Vector3( dir.x, 0f, dir.z ) * 2200f * ( _smashPower * 0.5f + 0.5f );
+			otherPlayer._rigidbody.AddForce( new Vector3( dir.x, 0f, dir.z ) * 2000f * ( _smashPower * 0.5f + 0.5f ) );
 			otherPlayer.Stun( _stunAdd * _smashPower );
 		}
 		else if( collision.gameObject.tag == "Barrel" )

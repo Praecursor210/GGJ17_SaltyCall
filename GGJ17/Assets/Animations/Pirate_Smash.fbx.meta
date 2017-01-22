@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 74008d7ea88e5864d9c489d5857a9441
-timeCreated: 1485039057
+guid: b540a001d2369cb4382073d066a3c218
+timeCreated: 1485077973
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -60,7 +60,7 @@ ModelImporter:
       name: Smash
       takeName: Take 001
       firstFrame: 0
-      lastFrame: 16
+      lastFrame: 15
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

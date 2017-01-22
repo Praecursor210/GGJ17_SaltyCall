@@ -24,7 +24,8 @@ public class Water : MonoBehaviour
 	{
 		for( int i = 0; i < _uvAnimationRate.Count; i++ )
 		{
-			_uvOffset[i] += ( _uvAnimationRate[i] * Time.deltaTime );
+			//_uvOffset[i] += ( _uvAnimationRate[i] * Time.deltaTime );
+			_uvOffset[i] = new Vector2( _uvOffset[i].x + ( _uvAnimationRate[i].x * Time.deltaTime ), Mathf.Sin( Time.time * _uvAnimationRate[i].y ) * 0.5f );
 			if( _renderer.enabled )
 			{
 				_renderer.materials[i].SetTextureOffset( _textureName, _uvOffset[i] );

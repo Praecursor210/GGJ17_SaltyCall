@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
 	public int _id;
 	public ParticleSystem _particleSmoke;
+	public ParticleSystem _particleSplash;
 
 	[Header( "Data" )]
 	[Range( 0f, 100f)]
@@ -56,6 +57,7 @@ public class Player : MonoBehaviour
 
 		_isDead = false;
 		_particleSmoke.Stop();
+		_particleSplash.Stop();
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_animator = GetComponent<Animator>();
@@ -79,6 +81,11 @@ public class Player : MonoBehaviour
 		{
 			_isDead = true;
 			Debug.Log( "Player " + _status._id + " is dead" );
+		}
+
+		if( transform.position.y <= -5f && !_particleSplash.isPlaying )
+		{
+			_particleSplash.Play();
 		}
 
 		if( Input.GetKeyDown( KeyCode.C ) )
@@ -141,10 +148,10 @@ public class Player : MonoBehaviour
 			_particleSmoke.Stop();
 		}
 
-		if( _rigidbody.velocity.y > 0 )
+		/*if( _rigidbody.velocity.y > 0 )
 		{
 			_rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0f, _rigidbody.velocity.z );
-		}
+		}*/
 
 		if( move.x != 0f || move.z != 0f )
 		{

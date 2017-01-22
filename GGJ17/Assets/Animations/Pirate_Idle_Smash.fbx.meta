@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 30ad5a42993770f41a7544d3d4c996c9
-timeCreated: 1485042173
+guid: d6f937109ac30824e9cda7191e9fc438
+timeCreated: 1485077973
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -32,7 +32,7 @@ ModelImporter:
     400022: RightLeg
     400024: Root
     4300000: Pirate01
-    7400000: IdleSmash
+    7400000: IdleSmah
     9500000: //RootNode
     13700000: Pirate01
   materials:
@@ -57,7 +57,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: IdleSmash
+      name: IdleSmah
       takeName: Take 001
       firstFrame: 0
       lastFrame: 60
