@@ -16,6 +16,6 @@ public class WinText : MonoBehaviour
 	public void DisplayWinner( int winner )
 	{
 		GetComponent<Text>().text = "Player " + winner + " win! ";
-		transform.GetChild( winner ).gameObject.SetActive( true );
+		transform.GetChild( winner - 1 ).gameObject.SetActive( true );
 	}
 }
